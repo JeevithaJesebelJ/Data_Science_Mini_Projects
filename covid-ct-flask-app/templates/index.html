@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>COVID CT Scan Detector | AI Healthcare</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f9fc;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+
+        /* NAVBAR */
+
+        nav {
+            height: 72px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8%;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 21px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: #2563eb;
+            color: white;
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+
+        .badge {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* HERO */
+
+        .hero {
+            text-align: center;
+            padding: 70px 20px 45px;
+        }
+
+
+        .hero-tag {
+            display: inline-block;
+            background: #e0edff;
+            color: #2563eb;
+
+            padding: 8px 16px;
+            border-radius: 20px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            margin-bottom: 22px;
+        }
+
+
+        .hero h1 {
+            font-size: 46px;
+            margin-bottom: 18px;
+            color: #111827;
+        }
+
+
+        .hero h1 span {
+            color: #2563eb;
+        }
+
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+
+            color: #6b7280;
+
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+
+        /* MAIN CARD */
+
+        .main-container {
+            width: 90%;
+            max-width: 850px;
+            margin: auto;
+            margin-bottom: 60px;
+        }
+
+
+        .upload-card {
+            background: white;
+
+            padding: 45px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.07);
+
+            border: 1px solid #edf0f5;
+        }
+
+
+        .upload-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+        .upload-title h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+
+        .upload-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        /* UPLOAD BOX */
+
+        .file-upload {
+            border: 2px dashed #93c5fd;
+
+            background: #f8fbff;
+
+            border-radius: 16px;
+
+            padding: 45px 20px;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+
+        .file-upload:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+        }
+
+
+        .upload-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+
+        .file-upload h3 {
+            margin-bottom: 8px;
+        }
+
+
+        .file-upload p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        input[type="file"] {
+            margin-top: 20px;
+        }
+
+
+        /* BUTTON */
+
+        .predict-btn {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+
+        .predict-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+
+        /* RESULT */
+
+        .result-section {
+
+            margin-top: 35px;
+
+            text-align: center;
+        }
+
+
+        .uploaded-image {
+
+            max-width: 100%;
+
+            width: 350px;
+
+            border-radius: 14px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid #e5e7eb;
+        }
+
+
+        .prediction-card {
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            background: #eff6ff;
+
+            border: 1px solid #bfdbfe;
+        }
+
+
+        .prediction-label {
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+
+        .prediction-value {
+
+            margin-top: 8px;
+
+            font-size: 26px;
+
+            font-weight: 700;
+
+            color: #1e40af;
+        }
+
+
+        /* INFO CARDS */
+
+        .info-section {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+
+            margin-top: 35px;
+        }
+
+
+        .info-card {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            border: 1px solid #edf0f5;
+
+            text-align: center;
+        }
+
+
+        .info-icon {
+
+            font-size: 30px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .info-card h3 {
+
+            font-size: 15px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .info-card p {
+
+            font-size: 13px;
+
+            color: #6b7280;
+
+            line-height: 1.5;
+        }
+
+
+        /* FOOTER */
+
+        footer {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #9ca3af;
+
+            font-size: 13px;
+        }
+
+
+        /* MOBILE */
+
+        @media(max-width: 700px) {
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+
+            .upload-card {
+                padding: 25px;
+            }
+
+
+            .info-section {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            nav {
+                padding: 0 5%;
+            }
+
+
+            .badge {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav>
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            🫁
+        </div>
+
+        COVID AI Detector
+
+    </div>
+
+
+    <div class="badge">
+        AI Powered Healthcare
+    </div>
+
+</nav>
+
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-tag">
+        🧠 Deep Learning Powered
+    </div>
+
+
+    <h1>
+        Detect COVID-19 from
+        <span>CT Scans</span>
+    </h1>
+
+
+    <p>
+        Upload a lung CT scan and let our deep learning model
+        analyze the image for COVID-19 classification.
+    </p>
+
+</section>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main-container">
+
+
+    <div class="upload-card">
+
+
+        <div class="upload-title">
+
+            <h2>Upload CT Scan</h2>
+
+            <p>
+                Select a lung CT scan image for analysis
+            </p>
+
+        </div>
+
+
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
+
+            <div class="file-upload">
+
+                <div class="upload-icon">
+                    📤
+                </div>
+
+
+                <h3>
+                    Choose an Image
+                </h3>
+
+
+                <p>
+                    PNG, JPG or JPEG image files
+                </p>
+
+
+                <input
+                    type="file"
+                    name="file"
+                    accept="image/*"
+                    required
+                >
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="predict-btn">
+
+                🔍 Analyze CT Scan
+
+            </button>
+
+
+        </form>
+
+
+
+        {% if image or prediction %}
+
+        <div class="result-section">
+
+
+            {% if image %}
+
+            <img
+                src="{{ image }}"
+                class="uploaded-image"
+                alt="Uploaded CT Scan">
+
+            {% endif %}
+
+
+
+            {% if prediction %}
+
+            <div class="prediction-card">
+
+                <div class="prediction-label">
+                    AI Prediction
+                </div>
+
+
+                <div class="prediction-value">
+
+                    {{ prediction }}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- FEATURES -->
+
+
+    <div class="info-section">
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                🧠
+            </div>
+
+
+            <h3>
+                Deep Learning
+            </h3>
+
+
+            <p>
+                CNN-based image classification model.
+            </p>
+
+        </div>
+
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                ⚡
+            </div>
+
+
+            <h3>
+                Fast Analysis
+            </h3>
+
+
+            <p>
+                Get predictions instantly after uploading.
+            </p>
+
+        </div>
+
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                🫁
+            </div>
+
+
+            <h3>
+                CT Scan Analysis
+            </h3>
+
+
+            <p>
+                Designed specifically for lung CT images.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    COVID-19 CT Scan Detector • Deep Learning Project
+
+</footer>
+
+
+</body>
+
+</html>
