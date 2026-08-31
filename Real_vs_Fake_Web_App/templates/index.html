@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Real vs Fake AI Detector</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+    <div class="background"></div>
+
+    <main class="app-container">
+
+        <!-- Logo -->
+
+        <div class="logo">
+
+            <div class="logo-icon">◈</div>
+
+            <span>AI Vision</span>
+
+        </div>
+
+
+        <!-- Main Card -->
+
+        <section class="card">
+
+            <div class="badge">
+                ✦ AI POWERED
+            </div>
+
+
+            <h1>
+                Real or Fake?
+            </h1>
+
+
+            <p class="subtitle">
+                Upload an image and let our deep learning model analyze
+                whether it is authentic or artificially generated.
+            </p>
+
+
+            <!-- Upload Form -->
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                <label for="image" class="upload-area">
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+                    <h3>Upload an Image</h3>
+
+                    <p>
+                        PNG, JPG or JPEG
+                    </p>
+
+
+                    <input
+                        id="image"
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        required>
+
+                </label>
+
+
+                <button type="submit">
+
+                    <span>Analyze Image</span>
+
+                    <span class="arrow">→</span>
+
+                </button>
+
+            </form>
+
+
+            <!-- Prediction Result -->
+
+            {% if result %}
+
+            <div class="result-card">
+
+                <p class="result-label">
+                    ANALYSIS COMPLETE
+                </p>
+
+
+                <h2 class="{{ result|lower }}">
+                    {{ result }}
+                </h2>
+
+
+                {% if confidence is not none %}
+
+                <div class="confidence-container">
+
+                    <div class="confidence-header">
+
+                        <span>Confidence</span>
+
+                        <strong>
+                            {{ "%.2f"|format(confidence) }}%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress"
+                            data-confidence="{{ confidence }}">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Footer -->
+
+        <p class="footer">
+            Powered by TensorFlow • Deep Learning Image Classification
+        </p>
+
+    </main>
+
+
+    <!-- JavaScript for Confidence Progress Bar -->
+
+    <script>
+
+        const progress = document.querySelector(".progress");
+
+        if (progress) {
+
+            const confidence = parseFloat(
+                progress.dataset.confidence
+            );
+
+            progress.style.width = confidence + "%";
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
